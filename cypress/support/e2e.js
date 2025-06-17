@@ -14,8 +14,4 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
-Cypress.on('uncaught:exception', (err, runnable) => {
-  // agar error dari aplikasi tidak menghentikan test
-  return false
-})
+import 'cypress-xpath';

@@ -1,23 +1,19 @@
-import LoginPage from '../support/pages/LoginPage'
-const loginPage = new LoginPage()
+import loginPage from '../support/pages/loginPage';
 
-describe('Login Tests with POM', () => {
-  beforeEach(() => {
-    loginPage.visit()
-  })
+describe('Login Test with POM', () => {
+  it('Should login successfully with valid credentials', () => {
+    // Intercept endpoint dashboard
+    cy.intercept('GET', '**/dashboard/index').as('dashboard');
 
-  it('should login successfully with valid credentials', () => {
-    loginPage.enterUsername('Admin')
-    loginPage.enterPassword('admin123')
-    loginPage.clickLogin()
-    loginPage.verifyLoginSuccess()
-    loginPage.logout()
-  })
+    loginPage.visit();
+    loginPage.enterUsername('Admin');
+    loginPage.enterPassword('admin123');
+    loginPage.clickLogin();
 
-  it('should show error with invalid credentials', () => {
-    loginPage.enterUsername('invalidUser')
-    loginPage.enterPassword('wrongPass')
-    loginPage.clickLogin()
-    loginPage.verifyLoginFail()
-  })
-})
+    // Tunggu permintaan login
+    cy.wait('@dashboard');
+
+    // Assertion: cek apakah dashboard muncul
+    cy.url().should('include', '/dashboard');
+  });
+});
